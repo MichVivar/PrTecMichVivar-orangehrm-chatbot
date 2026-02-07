@@ -30,7 +30,6 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Run Playwright tests & Consolidate
-      # Al usar 'npm test', se dispara el 'posttest' (consolidar.js) automáticamente
       run: npm test
       continue-on-error: true
 
@@ -39,7 +38,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Paquete-Completo-Evidencias-Ciclo
-        # Subimos la carpeta 'target' que es donde 'consolidar.js' pone todo
         path: target/Evidencias_PDF/
         retention-days: 7
 
@@ -48,6 +46,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        # Si tu consolidar.js deja una copia en la raíz, esto funciona.
-        # Si no, apunta a la carpeta donde esté el index.html del reporte.
         publish_dir: ./playwright-report

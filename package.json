@@ -1,5 +1,5 @@
 {
-  "name": "examen-orange-chatbot",
+  "name": "teoncred-playwright",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,8 +12,10 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.58.1",
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^25.2.1",
+    "allure-commandline": "^2.36.0",
     "allure-playwright": "^3.4.5",
     "playwright-pdf-reporter": "^1.0.4"
   },
