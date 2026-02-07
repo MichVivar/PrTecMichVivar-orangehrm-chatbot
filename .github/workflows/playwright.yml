@@ -1,0 +1,53 @@
+name: Playwright Tests & Evidence
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
+    - name: Run Playwright tests & Consolidate
+      # Al usar 'npm test', se dispara el 'posttest' (consolidar.js) automáticamente
+      run: npm test
+      continue-on-error: true
+
+    - name: Upload Full Evidence Package (PDF + HTML)
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Paquete-Completo-Evidencias-Ciclo
+        # Subimos la carpeta 'target' que es donde 'consolidar.js' pone todo
+        path: target/Evidencias_PDF/
+        retention-days: 7
+
+    - name: Deploy Playwright Report to Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        # Si tu consolidar.js deja una copia en la raíz, esto funciona.
+        # Si no, apunta a la carpeta donde esté el index.html del reporte.
+        publish_dir: ./playwright-report

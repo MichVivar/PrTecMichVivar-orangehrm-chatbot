@@ -1,0 +1,24 @@
+{
+  "name": "examen-orange-chatbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "posttest": "node consolidar.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.2.1",
+    "allure-playwright": "^3.4.5",
+    "playwright-pdf-reporter": "^1.0.4"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.19",
+    "fs-extra": "^11.3.3"
+  }
+}
