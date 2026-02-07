@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2026-02-07T23:19:03.286Z",
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "durationMs": 11,
+    "coveragePercent": 100,
+    "reliabilityScore": 0
+  }
+]
