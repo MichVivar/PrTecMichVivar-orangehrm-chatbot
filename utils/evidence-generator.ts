@@ -54,7 +54,9 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
         .replace(/\s+/g, '_')
         .replace(/@\w+/g, ''); // Limpia tags como @login
         
-    const scenarioName = testInfo.title.replace(/\s+/g, '_');
+    const scenarioName = testInfo.title
+        .replace(/[/\\?%*:|"<>]/g, '-') 
+        .replace(/\s+/g, '_');
     const statusFolder = testInfo.status === 'passed' ? 'PASADOS' : 'FALLIDOS';
 
     // 3. Construir ruta final: Ciclo / Feature / Escenario / PASADOS_FALLIDOS

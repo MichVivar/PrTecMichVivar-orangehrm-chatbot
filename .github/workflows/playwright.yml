@@ -39,6 +39,7 @@ jobs:
 
     - name: Upload Full Evidence Package (PDF + HTML)
       if: always()
+      continue-on-error: true
       uses: actions/upload-artifact@v4
       with:
         name: Paquete-Completo-Evidencias-Ciclo
