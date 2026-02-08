@@ -8,33 +8,31 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   
   reporter: [
-    ['html', { open: 'on-failure' }],
+    ['html', { open: 'never' }], // Cambiado 'on-failure' a 'never' para evitar que se trabe en CI
     ['allure-playwright', { outputFolder: 'allure-results' }],
     ['playwright-pdf-reporter', {
-        outputFolder: 'reportes-pdf',
-        filename: 'Reporte_Pruebas_TeonCred',
+        outputFolder: 'playwright-report/pdf', // Ajustado para que consolidar.js lo encuentre fácil
+        filename: 'test-report',
     }]
   ],
 
   use: {
     baseURL: 'https://opensource-demo.orangehrmlive.com/web/index.php',
-    
-    viewport: { width: 1440, height: 900 },
-    
+    // Quitamos el viewport de aquí para que mande el del proyecto
     headless: true, 
-    
-    trace: 'on-first-retry',
+    trace: 'on', // Cámbialo a 'on' para que siempre tengamos rastro si algo sale gris
     screenshot: 'on',
-    video: 'on-first-retry',
+    video: 'retain-on-failure',
   },
 
   projects: [
-    {
-      name: 'Chromium-Desktop',
-      use: { 
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1440, height: 900 },
+      {
+        name: 'Chromium-Desktop',
+        use: { 
+          ...devices['Desktop Chrome'],
+          viewport: { width: 1280, height: 720 }, // Un tamaño más estándar para PDF
+          deviceScaleFactor: 1, // <--- Baja esto para local
+        },
       },
-    },
   ],
 });

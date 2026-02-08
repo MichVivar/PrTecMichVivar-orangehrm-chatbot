@@ -20,10 +20,19 @@ export const test = base.extend<MyFixtures>({
         const makeStep = async (title: string, task: () => Promise<void>) => {
             await base.step(title, async () => {
                 await task();
-                // Captura temporal
+                
+                // --- SEGURO PARA ORANGEHRM ---
+                // Espera a que no haya peticiones de red activas (carga de datos)
+                await page.waitForLoadState('networkidle').catch(() => {}); 
+                // Espera un momento para que terminen las animaciones de CSS
+                await page.waitForTimeout(500); 
+
                 const ssPath = `test-results/temp_${Date.now()}.png`;
                 await fs.ensureDir('test-results');
-                await page.screenshot({ path: ssPath });
+                
+                // Tomamos la captura con 'fullPage' falso para evitar bugs de scroll
+                await page.screenshot({ path: ssPath, scale: 'css' }); 
+                
                 capturedSteps.push({ title, screenshotPath: ssPath });
             });
         };

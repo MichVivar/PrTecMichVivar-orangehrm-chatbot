@@ -29,6 +29,9 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
     const colorStatus = testInfo.status === 'passed' ? '#28a745' : '#dc3545';
     const azulPrimario = '#0066cc';
 
+    // MODIFICADO: Pausa inicial para asegurar que los archivos de imagen se terminaron de escribir en disco
+    await new Promise(resolve => setTimeout(resolve, 800));
+
     const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -37,13 +40,12 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
             @page { size: A4; margin: 0; }
             html, body { 
                 width: 210mm; 
-                height: 297mm; 
                 font-family: Arial, sans-serif; 
                 margin: 0; 
                 padding: 0; 
+                background-color: white; /* MODIFICADO: Forzar fondo blanco */
             }
             
-            /* --- ESTILOS DE LA PORTADA --- */
             .cover { 
                 padding: 60px 50px; 
                 page-break-after: always; 
@@ -51,6 +53,7 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
                 box-sizing: border-box;
                 display: flex;
                 flex-direction: column;
+                background-color: white;
             }
             .header-title { 
                 color: ${azulPrimario}; 
@@ -77,16 +80,7 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
                 border-left: 4px solid #eee; 
                 padding-left: 15px; 
             }
-            .info-label { 
-                font-weight: bold; 
-                color: #555;
-                text-transform: uppercase;
-                font-size: 12px;
-                margin-bottom: 5px; 
-                display: block;
-            }
 
-            /* --- ESTILOS DE PASOS (PANTALLA COMPLETA) --- */
             .step-container { 
                 page-break-before: always; 
                 padding: 20px;
@@ -95,6 +89,7 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
                 flex-direction: column;
                 box-sizing: border-box; 
                 position: relative; 
+                background-color: white;
             }
             .step-header { 
                 margin-bottom: 10px; 
@@ -110,14 +105,15 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                background-color: #ffffff;
             }
             .screenshot { 
-                max-width: 98%; 
-                max-height: 82vh; 
+                max-width: 95%; 
+                max-height: 80vh; 
                 height: auto; 
                 border: 2px solid #222; 
                 border-radius: 5px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
             }
 
             .footer { 
@@ -158,33 +154,65 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
             <div class="footer" style="position: relative; border: none;">Generado por TeonCred Automation Framework</div>
         </div>
 
-        ${steps.map((s, i) => `
+        ${steps.map((s, i) => {
+            // MODIFICADO: Validación de existencia de imagen para evitar que el Base64 falle
+            let base64Data = "";
+            if (fs.existsSync(s.screenshotPath)) {
+                base64Data = fs.readFileSync(s.screenshotPath).toString('base64');
+            }
+
+            return `
             <div class="step-container">
                 <div class="step-header">
                     <div class="step-num">PASO ${i + 1}</div>
                     <div class="step-desc">${s.title}</div>
                 </div>
                 <div class="img-wrapper">
-                    <img class="screenshot" src="data:image/png;base64,${fs.readFileSync(s.screenshotPath).toString('base64')}">
+                    ${base64Data ? 
+                        `<img class="screenshot" src="data:image/png;base64,${base64Data}">` : 
+                        `<div style="color:red;">Error: No se pudo cargar la imagen del paso</div>`}
                 </div>
                 <div class="footer">TeonCred Automation - Página ${i + 2}</div>
-            </div>
-        `).join('')}
+            </div>`;
+        }).join('')}
     </body>
     </html>
     `;
 
-    const browser = await chromium.launch({ args: ['--no-sandbox'] });
-    const page = await browser.newPage();
-    await page.setContent(htmlContent);
+    // MODIFICADO: Añadir argumentos para estabilidad en entornos Linux/CI
+    const browser = await chromium.launch({ 
+        headless: true, 
+        args: [
+            '--no-sandbox', 
+            '--disable-setuid-sandbox',
+            '--disable-web-security',
+            '--font-render-hinting=none'
+        ] 
+    });
+    const context = await browser.newContext({ deviceScaleFactor: 2 });
+    const page = await context.newPage();
     
+    // MODIFICADO: Cambiar a networkidle para dar tiempo al motor a renderizar los Base64
+    await page.setContent(htmlContent, { waitUntil: 'networkidle' });
+    
+    // MODIFICADO: Pausa de renderizado final
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     const pdfName = `Evidencia_${testInfo.title.replace(/\s+/g, '_')}.pdf`;
     await page.pdf({
         path: path.join(finalPath, pdfName),
         format: 'A4',
-        printBackground: true
+        printBackground: true, 
+        preferCSSPageSize: true,
+        margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' }
     });
 
     await browser.close();
-    steps.forEach(s => { if (fs.existsSync(s.screenshotPath)) fs.removeSync(s.screenshotPath); });
+    
+    // Limpieza de archivos temporales
+    steps.forEach(s => { 
+        if (fs.existsSync(s.screenshotPath)) {
+            try { fs.removeSync(s.screenshotPath); } catch (e) { console.log("Error limpiando imagen:", e); }
+        }
+    });
 }
