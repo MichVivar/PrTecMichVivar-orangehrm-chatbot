@@ -1,0 +1,22 @@
+[
+  {
+    "escenario": "Credenciales inválidas",
+    "usuario": "UserNameErroneo12345",
+    "password": "PwdErroneo12345"
+  },
+  {
+    "escenario": "Usuario requerido",
+    "usuario": "",
+    "password": "admin123"
+  },
+  {
+    "escenario": "Password requerido",
+    "usuario": "Admin",
+    "password": ""
+  },
+  {
+    "escenario": "Campos vacíos",
+    "usuario": "",
+    "password": ""
+  }
+]

@@ -1,8 +1,20 @@
+/**
+ * @file evidence-generator.ts
+ * @description Utilidad para la generación de reportes en formato PDF.
+ * Este módulo captura el flujo de ejecución, convierte capturas de pantalla a Base64
+ * y genera un documento PDF con diseño HTML/CSS.
+ */
+
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import dayjs from 'dayjs';
 import { chromium } from '@playwright/test';
 
+/**
+ * Gestiona la creación de carpetas secuenciales (001, 002, etc.) para cada ejecución diaria.
+ * @param {string} basePath - Ruta base donde se almacenarán las evidencias.
+ * @returns {Promise<string>} - Ruta de la carpeta creada para la sesión actual.
+ */
 async function getSequentialFolder(basePath: string): Promise<string> {
     const date = dayjs().format('DD-MM-YYYY');
     let counter = 1;
@@ -17,19 +29,43 @@ async function getSequentialFolder(basePath: string): Promise<string> {
     return folderPath;
 }
 
+/**
+ * Genera el nombre de la carpeta del ciclo basado en la fecha y hora de inicio.
+ * Esto asegura que todos los tests de una misma ejecución compartan la carpeta.
+ */
+function getCycleFolderName(): string {
+    return dayjs().format('[Ejecucion]_DD-MMM_hh-mm-a');
+}
+
+/**
+ * Genera un archivo PDF con la evidencia del test, incluyendo portada y pasos con capturas.
+ * @param {any} testInfo - Metadatos del test proporcionados por Playwright.
+ * @param {Array<{title: string, screenshotPath: string}>} steps - Listado de pasos ejecutados con sus respectivas imágenes.
+ */
 export async function generateCorporatePDF(testInfo: any, steps: { title: string, screenshotPath: string }[]) {
     const date = dayjs().format('DD/MM/YYYY');
     const timestamp = dayjs().format('HH:mm:ss');
-    const sessionFolder = await getSequentialFolder('./target/Evidencias_PDF');
-    const statusFolder = testInfo.status === 'passed' ? 'PASADOS' : 'FALLIDOS';
-    const finalPath = path.join(sessionFolder, statusFolder);
     
+    // 1. Definir la carpeta raíz del ciclo (será la misma para todos los tests de este minuto)
+    const cycleFolder = path.join('./target/Evidencias_PDF', getCycleFolderName());
+
+    // 2. Extraer nombres para la jerarquía
+    const featureName = (testInfo.titlePath[1] || 'General')
+        .replace(/\s+/g, '_')
+        .replace(/@\w+/g, ''); // Limpia tags como @login
+        
+    const scenarioName = testInfo.title.replace(/\s+/g, '_');
+    const statusFolder = testInfo.status === 'passed' ? 'PASADOS' : 'FALLIDOS';
+
+    // 3. Construir ruta final: Ciclo / Feature / Escenario / PASADOS_FALLIDOS
+    const finalPath = path.join(cycleFolder, featureName, scenarioName, statusFolder);
+    
+    // fs-extra se encarga de crear toda la cadena de carpetas si no existen
     await fs.ensureDir(finalPath);
 
     const colorStatus = testInfo.status === 'passed' ? '#28a745' : '#dc3545';
     const azulPrimario = '#0066cc';
 
-    // MODIFICADO: Pausa inicial para asegurar que los archivos de imagen se terminaron de escribir en disco
     await new Promise(resolve => setTimeout(resolve, 800));
 
     const htmlContent = `
@@ -151,11 +187,10 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
                 </ol>
             </div>
             <div style="flex-grow: 1;"></div>
-            <div class="footer" style="position: relative; border: none;">Generado por TeonCred Automation Framework</div>
+            <div class="footer" style="position: relative; border: none;">Generado por OrangeHRM Automation Framework</div>
         </div>
 
         ${steps.map((s, i) => {
-            // MODIFICADO: Validación de existencia de imagen para evitar que el Base64 falle
             let base64Data = "";
             if (fs.existsSync(s.screenshotPath)) {
                 base64Data = fs.readFileSync(s.screenshotPath).toString('base64');
@@ -179,7 +214,6 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
     </html>
     `;
 
-    // MODIFICADO: Añadir argumentos para estabilidad en entornos Linux/CI
     const browser = await chromium.launch({ 
         headless: true, 
         args: [
@@ -191,11 +225,9 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
     });
     const context = await browser.newContext({ deviceScaleFactor: 2 });
     const page = await context.newPage();
-    
-    // MODIFICADO: Cambiar a networkidle para dar tiempo al motor a renderizar los Base64
+
     await page.setContent(htmlContent, { waitUntil: 'networkidle' });
     
-    // MODIFICADO: Pausa de renderizado final
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     const pdfName = `Evidencia_${testInfo.title.replace(/\s+/g, '_')}.pdf`;
@@ -209,7 +241,6 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
 
     await browser.close();
     
-    // Limpieza de archivos temporales
     steps.forEach(s => { 
         if (fs.existsSync(s.screenshotPath)) {
             try { fs.removeSync(s.screenshotPath); } catch (e) { console.log("Error limpiando imagen:", e); }
