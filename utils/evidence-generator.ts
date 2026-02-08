@@ -232,7 +232,7 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
     
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const pdfName = `Evidencia_${testInfo.title.replace(/\s+/g, '_')}.pdf`;
+    const pdfName = `Evidencia_${testInfo.title.replace(/[:\\/*?"<>|]/g, '').replace(/\s+/g, '_')}.pdf`;
     await page.pdf({
         path: path.join(finalPath, pdfName),
         format: 'A4',
