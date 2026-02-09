@@ -1,0 +1,2 @@
+📤 ¿Mensaje "Hola" visible en chat?: true
+🤖 Respuesta final: Hola

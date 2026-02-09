@@ -1,0 +1,1 @@
+No se pudo capturar pantalla en el paso: Iniciar sesión con credenciales válidas. El navegador podría estar cerrándose.

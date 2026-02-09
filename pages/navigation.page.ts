@@ -1,6 +1,10 @@
 import { Locator, Page } from '@playwright/test';
 import { BasePage } from './base.page';
 
+/**
+ * @class navigationPage
+ * @description Modela el menu para que interactue el usuario
+ */
 
 export class NavigationPage extends BasePage {
     

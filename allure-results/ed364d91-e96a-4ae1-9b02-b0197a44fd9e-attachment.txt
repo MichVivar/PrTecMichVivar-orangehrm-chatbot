@@ -1,0 +1,2 @@
+📤 ¿Mensaje "Hola" visible en chat?: true
+🤖 Respuesta final: ¡Hola! ¿En qué puedo ayudarte con la documentación de Botpress?

@@ -40,23 +40,21 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
     const date = dayjs().format('DD/MM/YYYY');
     const timestamp = dayjs().format('HH:mm:ss');
     
-    // 1. Definir la carpeta raíz del ciclo (será la misma para todos los tests de este minuto)
     const cycleFolder = path.join('./target/Evidencias_PDF', CICLO_UNICO);
 
-    // 2. Extraer nombres para la jerarquía
     const featureName = (testInfo.titlePath[1] || 'General')
         .replace(/\s+/g, '_')
-        .replace(/@\w+/g, ''); // Limpia tags como @login
+        .replace(/@\w+/g, ''); // Limpia tags 
         
     const scenarioName = testInfo.title
         .replace(/[/\\?%*:|"<>]/g, '-') 
         .replace(/\s+/g, '_');
     const statusFolder = testInfo.status === 'passed' ? 'PASADOS' : 'FALLIDOS';
 
-    // 3. Construir ruta final: Ciclo / Feature / Escenario / PASADOS_FALLIDOS
+    // Construir ruta final: Ciclo / Feature / Escenario / PASADOS_FALLIDOS
     const finalPath = path.join(cycleFolder, featureName, scenarioName, statusFolder);
     
-    // fs-extra se encarga de crear toda la cadena de carpetas si no existen
+    // Se encarga de crear toda la cadena de carpetas si no existen
     await fs.ensureDir(finalPath);
 
     const colorStatus = testInfo.status === 'passed' ? '#28a745' : '#dc3545';

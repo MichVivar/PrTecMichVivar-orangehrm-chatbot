@@ -99,12 +99,10 @@ test.describe('Ingresar credenciales incorrectas @login', () => {
     for (const data of loginData) {
         test(`Escenario: ${data.escenario}`, async ({ pm, makeStep }) => {
             
-            // Paso: Ejecución del intento de inicio de sesión con los datos actuales del loop
             await makeStep(`Intentar login con: ${data.usuario || 'vacío'} / ${data.password || 'vacío'}`, async () => {
                 await pm.loginPage.iniciarSesion(data.usuario, data.password);
             });
 
-            // Paso: Verificación de mensajes de error y seguridad de acceso
             await makeStep('Validar respuesta del sistema y bloqueo de acceso', async () => {
 
                 if (!data.usuario && !data.password) {
@@ -126,7 +124,6 @@ test.describe('Ingresar credenciales incorrectas @login', () => {
                     expect(denegado).toBe(true);
                 });
 
-                // Validación de URL para confirmar que el usuario sigue en la pantalla de login
                 expect(pm.urlActual).not.toContain('/dashboard');
             });
         });

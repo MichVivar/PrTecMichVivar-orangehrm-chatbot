@@ -1,0 +1,1 @@
+📤 ¿Mensaje "Hola" visible en chat?: true

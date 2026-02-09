@@ -1,0 +1,303 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#content-area"
+    - generic [ref=e5]:
+      - generic [ref=e12]:
+        - link "Botpress home page light logo" [ref=e14] [cursor=pointer]:
+          - /url: https://botpress.com/docs
+          - generic [ref=e15]: Botpress home page
+          - img "light logo" [ref=e16]
+        - generic [ref=e18]:
+          - generic [ref=e20]:
+            - link "Docs" [ref=e21] [cursor=pointer]:
+              - /url: /docs
+            - link "Tutorial" [ref=e22] [cursor=pointer]:
+              - /url: /docs/tutorial/introduction
+            - link "API Reference" [ref=e23] [cursor=pointer]:
+              - /url: /docs/api-reference/introduction
+            - link "Changelog" [ref=e24] [cursor=pointer]:
+              - /url: /docs/changelog
+          - navigation [ref=e25]:
+            - list [ref=e26]:
+              - listitem [ref=e27]:
+                - link "Dashboard" [ref=e28] [cursor=pointer]:
+                  - /url: https://app.botpress.cloud
+                  - generic [ref=e30]: Dashboard
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - generic [ref=e34]:
+            - button "Open search" [ref=e36] [cursor=pointer]:
+              - generic [ref=e37]:
+                - img [ref=e38]
+                - generic [ref=e41]: Search...
+              - generic [ref=e42]: ⌘K
+            - generic [ref=e43]:
+              - list [ref=e44]:
+                - listitem [ref=e45]:
+                  - link "Community Discord" [ref=e46] [cursor=pointer]:
+                    - /url: https://discord.com/invite/botpress
+                    - img [ref=e47]
+                    - generic [ref=e48]: Community Discord
+                - listitem [ref=e49]:
+                  - link "News & Resources" [ref=e50] [cursor=pointer]:
+                    - /url: https://botpress.com/blog
+                    - img [ref=e51]
+                    - generic [ref=e52]: News & Resources
+              - generic [ref=e53]:
+                - heading "Get started" [level=5] [ref=e55]
+                - list [ref=e56]:
+                  - listitem [ref=e57]:
+                    - link "Welcome to Botpress" [ref=e58] [cursor=pointer]:
+                      - /url: /docs
+                      - generic [ref=e60]: Welcome to Botpress
+                  - listitem [ref=e61]:
+                    - link "Quickstart" [ref=e62] [cursor=pointer]:
+                      - /url: /docs/get-started/quick-start
+                      - generic [ref=e64]: Quickstart
+                  - listitem [ref=e65]:
+                    - button "Toggle Manage your agent section" [ref=e66] [cursor=pointer]:
+                      - generic [ref=e67]: Manage your agent
+                      - img [ref=e68]
+                  - listitem [ref=e70]:
+                    - link "Configure your workspace" [ref=e71] [cursor=pointer]:
+                      - /url: /docs/get-started/configure-your-workspace
+                      - generic [ref=e73]: Configure your workspace
+              - generic [ref=e74]:
+                - generic [ref=e75]:
+                  - heading "ADK" [level=5] [ref=e76]
+                  - generic [ref=e78]: Beta
+                - list [ref=e79]:
+                  - listitem [ref=e80]:
+                    - link "Introduction" [ref=e81] [cursor=pointer]:
+                      - /url: /docs/adk/introduction
+                      - generic [ref=e83]: Introduction
+                  - listitem [ref=e84]:
+                    - link "Quickstart" [ref=e85] [cursor=pointer]:
+                      - /url: /docs/adk/quickstart
+                      - generic [ref=e87]: Quickstart
+                  - listitem [ref=e88]:
+                    - link "Project structure" [ref=e89] [cursor=pointer]:
+                      - /url: /docs/adk/project-structure
+                      - generic [ref=e91]: Project structure
+                  - listitem [ref=e92]:
+                    - button "Toggle Concepts section" [ref=e93] [cursor=pointer]:
+                      - generic [ref=e94]: Concepts
+                      - img [ref=e95]
+                  - listitem [ref=e97]:
+                    - link "Managing integrations" [ref=e98] [cursor=pointer]:
+                      - /url: /docs/adk/managing-integrations
+                      - generic [ref=e100]: Managing integrations
+                  - listitem [ref=e101]:
+                    - link "Runtime utilities" [ref=e102] [cursor=pointer]:
+                      - /url: /docs/adk/runtime
+                      - generic [ref=e104]: Runtime utilities
+                  - listitem [ref=e105]:
+                    - button "Toggle Zai section" [ref=e106] [cursor=pointer]:
+                      - generic [ref=e107]: Zai
+                      - img [ref=e108]
+                  - listitem [ref=e110]:
+                    - link "CLI reference" [ref=e111] [cursor=pointer]:
+                      - /url: /docs/adk/cli-reference
+                      - generic [ref=e113]: CLI reference
+              - generic [ref=e114]:
+                - heading "Studio" [level=5] [ref=e116]
+                - list [ref=e117]:
+                  - listitem [ref=e118]:
+                    - link "Introduction" [ref=e119] [cursor=pointer]:
+                      - /url: /docs/studio/introduction
+                      - generic [ref=e121]: Introduction
+                  - listitem [ref=e122]:
+                    - link "Tutorial" [ref=e123] [cursor=pointer]:
+                      - /url: /docs/tutorial
+                      - generic [ref=e125]: Tutorial
+                  - listitem [ref=e126]:
+                    - button "Toggle Concepts section" [ref=e127] [cursor=pointer]:
+                      - generic [ref=e128]: Concepts
+                      - img [ref=e129]
+                  - listitem [ref=e131]:
+                    - button "Toggle Guides section" [ref=e132] [cursor=pointer]:
+                      - generic [ref=e133]: Guides
+                      - img [ref=e134]
+              - generic [ref=e136]:
+                - heading "Integrations" [level=5] [ref=e138]
+                - list [ref=e139]:
+                  - listitem [ref=e140]:
+                    - link "Introduction" [ref=e141] [cursor=pointer]:
+                      - /url: /docs/integrations/get-started/introduction
+                      - generic [ref=e143]: Introduction
+                  - listitem [ref=e144]:
+                    - link "Hub" [ref=e145] [cursor=pointer]:
+                      - /url: /docs/integrations/get-started/botpress-hub
+                      - generic [ref=e147]: Hub
+                  - listitem [ref=e148]:
+                    - button "Toggle Guides section" [ref=e149] [cursor=pointer]:
+                      - generic [ref=e150]: Guides
+                      - img [ref=e151]
+                  - listitem [ref=e153]:
+                    - button "Toggle SDK section" [ref=e154] [cursor=pointer]:
+                      - generic [ref=e155]: SDK
+                      - img [ref=e156]
+              - generic [ref=e158]:
+                - heading "Webchat" [level=5] [ref=e160]
+                - list [ref=e161]:
+                  - listitem [ref=e162]:
+                    - link "Introduction" [ref=e163] [cursor=pointer]:
+                      - /url: /docs/webchat/get-started/introduction
+                      - generic [ref=e165]: Introduction
+                  - listitem [ref=e166]:
+                    - link "Quickstart" [ref=e167] [cursor=pointer]:
+                      - /url: /docs/webchat/get-started/quick-start
+                      - generic [ref=e169]: Quickstart
+                  - listitem [ref=e170]:
+                    - link "Embed in element" [ref=e171] [cursor=pointer]:
+                      - /url: /docs/webchat/get-started/embed-in-element
+                      - generic [ref=e173]: Embed in element
+                  - listitem [ref=e174]:
+                    - link "Configure Webchat" [ref=e175] [cursor=pointer]:
+                      - /url: /docs/webchat/get-started/configure-your-webchat
+                      - generic [ref=e177]: Configure Webchat
+                  - listitem [ref=e178]:
+                    - button "Toggle Interact with Webchat section" [ref=e179] [cursor=pointer]:
+                      - generic [ref=e180]: Interact with Webchat
+                      - img [ref=e181]
+                  - listitem [ref=e183]:
+                    - button "Toggle Integrations section" [ref=e184] [cursor=pointer]:
+                      - generic [ref=e185]: Integrations
+                      - img [ref=e186]
+                  - listitem [ref=e188]:
+                    - button "Toggle React library section" [ref=e189] [cursor=pointer]:
+                      - generic [ref=e190]: React library
+                      - img [ref=e191]
+              - generic [ref=e193]:
+                - heading "Desk" [level=5] [ref=e195]
+                - list [ref=e196]:
+                  - listitem [ref=e197]:
+                    - link "Introduction" [ref=e198] [cursor=pointer]:
+                      - /url: /docs/desk/introduction
+                      - generic [ref=e200]: Introduction
+          - button "Toggle dark mode" [ref=e204] [cursor=pointer]:
+            - generic [ref=e205]:
+              - img [ref=e206]
+              - img [ref=e213]
+        - generic [ref=e218]:
+          - generic [ref=e219]:
+            - generic [ref=e221]:
+              - heading "Documentation" [level=1] [ref=e222]
+              - generic [ref=e223]: Learn how to use Botpress, the complete AI agent platform.
+              - generic [ref=e224]:
+                - 'button "bolt icon Expand image: bolt icon Ask AI" [ref=e225] [cursor=pointer]':
+                  - generic [ref=e226]:
+                    - generic [ref=e227]:
+                      - generic [ref=e229]:
+                        - img "bolt icon"
+                      - generic:
+                        - 'button "Expand image: bolt icon"'
+                    - generic [ref=e230]: Ask AI
+                - link "Get help" [ref=e231] [cursor=pointer]:
+                  - /url: https://discord.gg/botpress
+                  - generic [ref=e232]: Get help
+            - generic [ref=e233]:
+              - link "adk ADK TypeScript library for building AI agents from code Beta Install the CLI" [ref=e235] [cursor=pointer]:
+                - /url: /docs/adk/introduction
+                - img "adk" [ref=e236]
+                - generic [ref=e238]:
+                  - heading "ADK" [level=2] [ref=e239]
+                  - generic [ref=e241]:
+                    - text: TypeScript library for building AI agents from code
+                    - generic [ref=e242]: Beta
+                  - button "Install the CLI" [ref=e244]:
+                    - text: Install the CLI
+                    - img [ref=e245]
+              - link "studio Studio Visual, drag-and-drop interface for building AI agents Build an agent" [ref=e248] [cursor=pointer]:
+                - /url: /docs/studio/introduction
+                - img "studio" [ref=e249]
+                - generic [ref=e251]:
+                  - heading "Studio" [level=2] [ref=e252]
+                  - generic [ref=e253]: Visual, drag-and-drop interface for building AI agents
+                  - button "Build an agent" [ref=e255]:
+                    - text: Build an agent
+                    - img [ref=e256]
+              - link "desk Desk Customer support workspace for human-AI teams Import your customers" [ref=e259] [cursor=pointer]:
+                - /url: /docs/desk/introduction
+                - img "desk" [ref=e260]
+                - generic [ref=e262]:
+                  - heading "Desk" [level=2] [ref=e263]
+                  - generic [ref=e264]: Customer support workspace for human-AI teams
+                  - button "Import your customers" [ref=e266]:
+                    - text: Import your customers
+                    - img [ref=e267]
+            - generic [ref=e269]:
+              - link "Webchat Custom frontend for your AI agent." [ref=e271] [cursor=pointer]:
+                - /url: /docs/webchat/get-started/introduction
+                - generic [ref=e272]:
+                  - img [ref=e274]
+                  - generic [ref=e276]:
+                    - heading "Webchat" [level=2] [ref=e277]:
+                      - text: Webchat
+                      - img [ref=e278]
+                    - generic [ref=e280]: Custom frontend for your AI agent.
+              - link "Integrations Channels to deploy or interact with your agent." [ref=e282] [cursor=pointer]:
+                - /url: /docs/integrations/get-started/introduction
+                - generic [ref=e283]:
+                  - img [ref=e285]
+                  - generic [ref=e287]:
+                    - heading "Integrations" [level=2] [ref=e288]:
+                      - text: Integrations
+                      - img [ref=e289]
+                    - generic [ref=e291]: Channels to deploy or interact with your agent.
+          - generic [ref=e293]:
+            - textbox "Ask a question..." [ref=e294]
+            - generic: ⌘I
+            - button "Send message" [disabled] [ref=e295]:
+              - img [ref=e296]
+  - generic "Close panel"
+  - generic [ref=e298]:
+    - iframe [ref=e300]:
+      - generic [ref=f1e2]:
+        - generic:
+          - text: Drop files to upload
+          - img
+        - generic [ref=f1e4] [cursor=pointer]:
+          - img "Assistant" [ref=f1e6]
+          - generic [ref=f1e7]:
+            - generic [ref=f1e8]:
+              - generic [ref=f1e9]: Assistant
+              - img [ref=f1e10]
+            - generic [ref=f1e12]: Ask AI a question about the documentation. Powered by Botpress.
+          - button "New conversation" [ref=f1e14]:
+            - img [ref=f1e15]
+        - generic [ref=f1e17]:
+          - generic [ref=f1e18]: What can I help with today?
+          - generic [ref=f1e19]:
+            - button "How do I add an AI agent to WhatsApp?" [ref=f1e20] [cursor=pointer]:
+              - generic [ref=f1e21]: How do I add an AI agent to WhatsApp?
+            - button "What are Knowledge Bases?" [ref=f1e22] [cursor=pointer]:
+              - generic [ref=f1e23]: What are Knowledge Bases?
+            - button "How to add a webhook to my agent?" [ref=f1e24] [cursor=pointer]:
+              - generic [ref=f1e25]: How to add a webhook to my agent?
+        - generic [ref=f1e26]:
+          - generic [ref=f1e27]:
+            - button "Add suggested context" [ref=f1e29] [cursor=pointer]:
+              - generic [ref=f1e30]:
+                - generic [ref=f1e31]: Welcome to Botpress
+                - generic [ref=f1e32]: /docs
+              - img [ref=f1e33]
+            - button "Select model" [ref=f1e35] [cursor=pointer]:
+              - generic [ref=f1e36]: GPT-OSS-120b
+              - img [ref=f1e38]
+          - generic [ref=f1e40]:
+            - textbox "Message Input" [ref=f1e41]:
+              - /placeholder: Ask a question...
+            - button "Send Message Button"
+            - button "Voice Input Button" [ref=f1e42] [cursor=pointer]
+    - generic "Resize panel" [ref=e301]:
+      - button "Close bot":
+        - img
+  - button "Open bot" [ref=e302] [cursor=pointer]:
+    - img [ref=e303]
+  - alert [ref=e306]
+```

@@ -2,6 +2,11 @@ import { Locator, Page, expect } from '@playwright/test';
 import { BasePage } from './base.page';
 import path from 'path';
 
+/**
+ * @class PersonalDetailPage
+ * @description Modela la página de MyInfo y metodos de interacción
+ */
+
 export class PersonalDetailPage extends BasePage {
 
     private readonly personalDetailsHeader: Locator;
@@ -162,7 +167,6 @@ export class PersonalDetailPage extends BasePage {
             console.log("El spinner tardó demasiado, intentaré continuar...");
         });
 
-        // 3. Verificamos que un elemento real de la página sea editable antes de seguir
         await expect(this.firstNameInput).toBeVisible({ timeout: 10000 });
     }
 
