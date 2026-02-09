@@ -1,6 +1,8 @@
 import { Page } from '@playwright/test';
 import { LoginPage } from './login.page';
 import { DashboardPage } from './dashboard.page'; 
+import { NavigationPage } from './navigation.page';
+import { PersonalDetailPage } from './personalDetail.page';
 
 /**
  * @class PageManager
@@ -11,6 +13,8 @@ export class PageManager {
     private readonly page: Page;
     private readonly _loginPage: LoginPage;
     private readonly _dashboardPage: DashboardPage; 
+    private readonly _naviegationPage: NavigationPage;
+    private readonly _personalDetailPage: PersonalDetailPage;
 
     /**
      * Instanciamos las páginas aquí
@@ -19,6 +23,8 @@ export class PageManager {
         this.page = page;
         this._loginPage = new LoginPage(this.page);
         this._dashboardPage = new DashboardPage(this.page); 
+        this._naviegationPage = new NavigationPage(this.page);
+        this._personalDetailPage = new PersonalDetailPage(this.page);
     }
 
     /**
@@ -33,6 +39,20 @@ export class PageManager {
      */
     get dashboardPage(): DashboardPage {
         return this._dashboardPage;
+    }
+
+    /**
+     * @returns {NavigationPage} Instancia de la página de navegación.
+     */
+    get navigationPage(): NavigationPage { 
+        return this._naviegationPage;
+    }
+
+    /**
+     * @returns {PersonalDetailPage} Instancia de la página de detalles personales.
+     */
+    get personalDetailPage(): PersonalDetailPage {
+        return this._personalDetailPage;
     }
 
     /**

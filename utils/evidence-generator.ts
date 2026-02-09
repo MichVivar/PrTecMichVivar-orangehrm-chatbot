@@ -29,13 +29,7 @@ async function getSequentialFolder(basePath: string): Promise<string> {
     return folderPath;
 }
 
-/**
- * Genera el nombre de la carpeta del ciclo basado en la fecha y hora de inicio.
- * Esto asegura que todos los tests de una misma ejecución compartan la carpeta.
- */
-function getCycleFolderName(): string {
-    return dayjs().format('[Ejecucion]_DD-MMM_hh-mm-a');
-}
+const CICLO_UNICO = dayjs().format('[Ejecucion]_DD-MMM_hh-mm-a');
 
 /**
  * Genera un archivo PDF con la evidencia del test, incluyendo portada y pasos con capturas.
@@ -47,7 +41,7 @@ export async function generateCorporatePDF(testInfo: any, steps: { title: string
     const timestamp = dayjs().format('HH:mm:ss');
     
     // 1. Definir la carpeta raíz del ciclo (será la misma para todos los tests de este minuto)
-    const cycleFolder = path.join('./target/Evidencias_PDF', getCycleFolderName());
+    const cycleFolder = path.join('./target/Evidencias_PDF', CICLO_UNICO);
 
     // 2. Extraer nombres para la jerarquía
     const featureName = (testInfo.titlePath[1] || 'General')

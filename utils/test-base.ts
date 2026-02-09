@@ -33,28 +33,32 @@ export const test = base.extend<MyFixtures>({
     makeStep: async ({ page }, use, testInfo) => {
         const capturedSteps: { title: string; screenshotPath: string }[] = [];
 
-        /**
-         * Realiza la acción, espera estabilidad de la UI y captura pantalla.
-         */
         const makeStep = async (title: string, task: () => Promise<void>) => {
             await base.step(title, async () => {
                 await task();
-                
-                await page.waitForLoadState('networkidle').catch(() => {}); 
-                await page.waitForTimeout(500); 
 
-                const ssPath = `test-results/temp_${Date.now()}.png`;
-                await fs.ensureDir('test-results');
+                if (!page.isClosed()) {
+                    try {
+                        await page.waitForLoadState('load', { timeout: 5000 }).catch(() => {}); 
+                        
+                        const ssPath = `test-results/temp_${Date.now()}.png`;
+                        await fs.ensureDir('test-results');
 
-                await page.screenshot({ path: ssPath, scale: 'css' }); 
-                
-                capturedSteps.push({ title, screenshotPath: ssPath });
+                        await page.screenshot({ path: ssPath, scale: 'css', timeout: 3000 }); 
+                        
+                        capturedSteps.push({ title, screenshotPath: ssPath });
+                    } catch (e) {
+                        console.warn(`No se pudo capturar pantalla en el paso: ${title}. El navegador podría estar cerrándose.`);
+                    }
+                }
             });
         };
 
         await use(makeStep);
 
-        await generateCorporatePDF(testInfo, capturedSteps);
+        if (capturedSteps.length > 0) {
+            await generateCorporatePDF(testInfo, capturedSteps);
+        }
     },
 });
 

@@ -1,0 +1,15 @@
+{
+  "datosEmpleado": {
+    "firstName": "Michelle",
+    "middleName": "QA",
+    "lastName": "Automat",
+    "employeeId": "998877",
+    "otherId": "ID-001",
+    "driverLicense": "DL-2026-XYZ",
+    "licenseExpiry": "2028-12-31",
+    "nationality": "Mexican",
+    "maritalStatus": "Single",
+    "birthDate": "1995-15-05",
+    "gender": "Male"
+  }
+}

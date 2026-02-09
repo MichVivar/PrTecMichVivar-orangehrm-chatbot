@@ -3,43 +3,41 @@ const path = require('path');
 
 async function consolidar() {
     const basePath = './target/Evidencias_PDF';
+    const sourceReport = './playwright-report';
     
     if (!await fs.pathExists(basePath)) {
         console.log("⚠️ No se encontró la carpeta de evidencias base.");
         return;
     }
 
-    // 1. Buscamos las carpetas y filtramos nombres conflictivos
+    // 1. Buscamos la carpeta del ciclo real generada por los tests
     const folders = await fs.readdir(basePath);
     
-    // Filtramos para obtener la carpeta del ciclo
+    // Filtramos directorios y ordenamos para obtener el más reciente
     const latestFolder = folders
         .filter(f => fs.lstatSync(path.join(basePath, f)).isDirectory())
         .sort()
         .reverse()[0];
 
-    const sourceReport = './playwright-report';
-
-    if (!latestFolder || !await fs.pathExists(sourceReport)) {
-        console.log("⚠️ No hay reportes nuevos o carpetas de ciclo para consolidar.");
+    // Validación de seguridad
+    if (!latestFolder) {
+        console.log("⚠️ No se encontró ninguna carpeta de ciclo.");
         return;
     }
 
-    // 2. LIMPIEZA: Aseguramos que la ruta de destino sea segura para GitHub
-    // Reemplazamos ":" por "-" en el nombre de la carpeta del ciclo si es que lo trae
-    const safeFolderName = latestFolder.replace(/[:]/g, '-');
-    const sessionPath = path.join(basePath, safeFolderName);
+    const sessionPath = path.join(basePath, latestFolder);
     const targetReport = path.join(sessionPath, 'Reporte_Tecnico_Graficas');
 
     try {
-        // Si el nombre original tenía ":", renombramos la carpeta físicamente antes de copiar
-        if (latestFolder !== safeFolderName) {
-            await fs.rename(path.join(basePath, latestFolder), sessionPath);
+        // 2. Verificamos si existe el reporte de Playwright antes de copiar
+        if (await fs.pathExists(sourceReport)) {
+            // Usamos copySync o copy para asegurar que el reporte de gráficas 
+            // se integre a la carpeta del ciclo único
+            await fs.copy(sourceReport, targetReport);
+            console.log(`✅ Reporte técnico integrado con éxito en: ${targetReport}`);
+        } else {
+            console.log("⚠️ No se encontró 'playwright-report' para consolidar.");
         }
-
-        // 3. Copiamos el reporte interactivo al ciclo
-        await fs.copy(sourceReport, targetReport);
-        console.log(`✅ Historial consolidado con éxito en: ${sessionPath}`);
     } catch (err) {
         console.error(`❌ Error al consolidar: ${err.message}`);
     }

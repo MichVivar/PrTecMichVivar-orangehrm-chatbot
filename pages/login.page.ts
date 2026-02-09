@@ -20,7 +20,7 @@ export class LoginPage extends BasePage {
         
         this.userInput = page.locator('input[name="username"]');
         this.passwordInput = page.locator('input[name="password"]');
-        this.loginButton = page.getByRole('button', { name: /Login/i });
+        this.loginButton = page.locator('button[type="submit"]');
         this.warningCredInvalidas = page.locator('.oxd-alert-content-text')
         this.warningCampoReqUser = page.locator('div.oxd-input-group', { has: page.locator('input[name="username"]') })
                         .locator('.oxd-input-field-error-message');
@@ -54,5 +54,17 @@ export class LoginPage extends BasePage {
     }
     async obtenerErrorPassword() { 
         return await this.obtenerTexto(this.warningCampoReqPw); 
+    }
+
+    async ingresaUsuario(user: string) {
+        if (user) await this.escribir(this.userInput, user);
+    }
+
+    async ingresaPassword(password: string) {
+        if (password) await this.escribir(this.passwordInput, password);
+    }
+
+    async clickLogin() {
+        await this.clickear(this.loginButton);
     }
 }

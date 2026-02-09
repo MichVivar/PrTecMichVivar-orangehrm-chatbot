@@ -1,0 +1,104 @@
+import { test, expect } from '../utils/test-base';
+import userData from '../data/personal-data.json';
+test.beforeEach(async ({ pm, makeStep }) => {
+    await makeStep('Navegar a la página de login', async () => {
+        await pm.loginPage.navegarPagina();
+    });
+    await makeStep('Iniciar sesión con credenciales válidas', async () => {
+        await pm.loginPage.ingresaUsuario('Admin');
+        await pm.loginPage.ingresaPassword('admin123');
+        await pm.loginPage.clickLogin();
+    });
+});
+
+/**
+ * @description Suite para validar el acceso a la sección My Info y la visualización del encabezado Personal Details.
+ * @tag login @smoke
+ */
+test.describe('Acceso a My Info @myinfo', () => {
+
+    /**
+     * @description Caso de prueba: Acceso a My Info y validación del encabezado Personal Details.
+     */
+    test('Accede a My Info y valida el encabezado Personal Details', async ({ pm, makeStep }) => {
+        await makeStep('Valida que el menú lateral esté completo', async () => {
+            const memnuValido = await pm.navigationPage.validarMenuCompleto();
+            expect(memnuValido).toBe(true);
+        });
+
+        await makeStep('Filtrar el menú lateral buscando "My Info"', async () => {
+            await pm.navigationPage.buscarNavegar('My Info');
+        });
+
+        await makeStep('Hacer clic en la opción filtrada de My Info', async () => {
+            await pm.navigationPage.irAMyInfo();
+        });
+
+        await makeStep('Validar que se muestra el encabezado Personal Details', async () => {
+            const encabezado = await pm.personalDetailPage.validarEncabezadoPersonalDetails();
+            expect(encabezado).toBe(true);
+        });
+    });
+});
+
+test.describe('Llenado de información de Personal Details @myinfo', () => {
+
+    test('Agregar y guardar la información de Personal Details', async ({ pm, makeStep }) => {
+        const dt = userData.datosEmpleado;
+        const genero = dt.gender as "Male" | "Female";
+
+        await makeStep('Navegar a la sección My Info', async () => {
+            await pm.navigationPage.irAMyInfo();
+            const encabezado = await pm.personalDetailPage.validarEncabezadoPersonalDetails();
+            expect(encabezado).toBe(true);
+        });
+
+        await makeStep('Llenar el apartasdo Employee Full Name', async () => {
+            await pm.personalDetailPage.esperarCargaDeSeccion();
+
+            await pm.personalDetailPage.escribeFirtName(dt.firstName);
+            await pm.personalDetailPage.escribeMiddleName(dt.middleName);
+            await pm.personalDetailPage.escribeLastName(dt.lastName);
+        });
+
+        await makeStep('Llenar el apartado Employee Id', async () => {
+            await pm.personalDetailPage.escribeEmployeeId(dt.employeeId);
+        });
+        
+        await makeStep('Llenar el apartado Other Id', async () => {
+            await pm.personalDetailPage.escribeOtherId(dt.otherId);
+        });
+
+        await makeStep('Llenar el apartado Drivers License Number', async () => {
+            await pm.personalDetailPage.escribeDriverLicense(dt.driverLicense);
+        });
+
+        await makeStep('Llenar el apartado License Expiry Date', async () => {
+            await pm.personalDetailPage.escribeLicenseExpiryDate(dt.licenseExpiry);
+        });
+
+        await makeStep('Seleccionar Nacionalidad', async () => {
+            await pm.personalDetailPage.seleccionarNationality(dt.nationality);
+        });
+
+        await makeStep('Seleccionar Estado Civil', async () => {
+            await pm.personalDetailPage.seleccionarEstadoCivil(dt.maritalStatus);
+        });
+
+        await makeStep('Escribir Fecha de Nacimiento', async () => {
+            await pm.personalDetailPage.escribirFehcaNacimiento(dt.birthDate);
+        });
+
+        await makeStep('Seleccionar Género', async () => {
+            await pm.personalDetailPage.seleccionarGenero(genero);
+        });
+
+        await makeStep('Hacer clic en el botón Guardar', async () => {
+            await pm.personalDetailPage.clickGuardar();
+        });
+
+        await makeStep('Validar que se muestra un mensaje de éxito', async () => {
+            await pm.personalDetailPage.validarMensajeExito();
+        });
+    });    
+});

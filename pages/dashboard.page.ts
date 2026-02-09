@@ -12,7 +12,8 @@ export class DashboardPage extends BasePage {
 
     constructor(page: Page) {
         super(page);
-        this.dashboardTitle = page.getByRole('heading', { name: 'Dashboard' });
+        //Locator Dashboard (Inmune al idioma)
+        this.dashboardTitle = page.locator('.oxd-topbar-header-title h6');
     }
 
     /**
@@ -21,4 +22,13 @@ export class DashboardPage extends BasePage {
     async estaEnDashboard(): Promise<boolean> {
         return await this.esVisible(this.dashboardTitle);
     }
+
+    /**
+     * Meodo para validar que no se puede acceder al dashboard, verificando la ausencia del título principal con un boolean.
+     */
+    async estaBloqueado(): Promise<boolean> {
+        const visible = await this.esVisible(this.dashboardTitle, 1500); 
+        return !visible;
+    }
+
 }
