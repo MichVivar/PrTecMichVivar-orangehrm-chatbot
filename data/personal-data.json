@@ -1,15 +1,26 @@
 {
   "datosEmpleado": {
-    "firstName": "Michelle",
-    "middleName": "QA",
-    "lastName": "Automat",
-    "employeeId": "998877",
-    "otherId": "ID-001",
-    "driverLicense": "DL-2026-XYZ",
-    "licenseExpiry": "2028-12-31",
-    "nationality": "Mexican",
-    "maritalStatus": "Single",
-    "birthDate": "1995-15-05",
-    "gender": "Male"
+    "personalDetails": {
+      "firstName": "Michelle",
+      "middleName": "QA",
+      "lastName": "Automat",
+      "employeeId": "998877",
+      "otherId": "ID-001",
+      "driverLicense": "DL-2026-XYZ",
+      "licenseExpiry": "2028-12-31",
+      "nationality": "Mexican",
+      "maritalStatus": "Single",
+      "birthDate": "1995-05-15",
+      "gender": "Male"
+    },
+    "customFields": {
+      "bloodType": "O+",
+      "testField": "687"
+    },
+    "attachments": {
+      "fileName": "TestOrange.jpg",
+      "comment": "Imagen para prueba de adjuntos",
+      "updatedComment": "Imagen actualizada para prueba de adjuntos"
+    }
   }
 }

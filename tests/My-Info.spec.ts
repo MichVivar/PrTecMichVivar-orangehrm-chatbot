@@ -1,5 +1,6 @@
 import { test, expect } from '../utils/test-base';
 import userData from '../data/personal-data.json';
+
 test.beforeEach(async ({ pm, makeStep }) => {
     await makeStep('Navegar a la página de login', async () => {
         await pm.loginPage.navegarPagina();
@@ -43,19 +44,25 @@ test.describe('Acceso a My Info @myinfo', () => {
 
 test.describe('Llenado de información de Personal Details @myinfo', () => {
 
-    test('Agregar y guardar la información de Personal Details', async ({ pm, makeStep }) => {
-        const dt = userData.datosEmpleado;
-        const genero = dt.gender as "Male" | "Female";
-
+    test.beforeEach(async ({ pm, makeStep }) => {
         await makeStep('Navegar a la sección My Info', async () => {
             await pm.navigationPage.irAMyInfo();
             const encabezado = await pm.personalDetailPage.validarEncabezadoPersonalDetails();
             expect(encabezado).toBe(true);
+            await pm.personalDetailPage.esperarCargaDeSeccion();
         });
+    });
+
+    /**
+     * @description Caso de prueba: Llenado y guardado de la información en Personal Details.
+     * Valida que el usuario pueda ingresar datos en los campos correspondientes y guardar la información correctamente.
+     */
+
+    test('Agregar y guardar la información de Personal Details', async ({ pm, makeStep }) => {
+        const dt = userData.datosEmpleado.personalDetails;
+        const genero = dt.gender as "Male" | "Female";
 
         await makeStep('Llenar el apartasdo Employee Full Name', async () => {
-            await pm.personalDetailPage.esperarCargaDeSeccion();
-
             await pm.personalDetailPage.escribeFirtName(dt.firstName);
             await pm.personalDetailPage.escribeMiddleName(dt.middleName);
             await pm.personalDetailPage.escribeLastName(dt.lastName);
@@ -100,5 +107,48 @@ test.describe('Llenado de información de Personal Details @myinfo', () => {
         await makeStep('Validar que se muestra un mensaje de éxito', async () => {
             await pm.personalDetailPage.validarMensajeExito();
         });
-    });    
+    });
+
+    test('Agregar y guardar la información de Custom Fields', async ({ pm, makeStep }) => {
+        const dt = userData.datosEmpleado.customFields;
+        
+        await makeStep('Llenar el campo de Blood Type', async () => {
+            await pm.personalDetailPage.seleccionarBloodType(dt.bloodType);
+        });
+
+        await makeStep('Llenar campo de Test Field', async () => {
+            await pm.personalDetailPage.escribirTestField(dt.testField);
+        });
+
+        await makeStep('Hacer clic en el botón Guardar', async () => {
+            await pm.personalDetailPage.clickGuardarCustomFields();
+        });
+
+        await makeStep('Validar que se muestra un mensaje de éxito', async () => {
+            await pm.personalDetailPage.validarMensajeExito();
+        });
+    });
+
+    test('Acciones en la sección de Attachments', async ({ pm, makeStep }) => {
+        const adjunto = userData.datosEmpleado.attachments;
+
+        await makeStep('Cargar un archivo adjunto', async () => {
+            await pm.personalDetailPage.agregarAdjunto(adjunto.fileName, adjunto.comment);
+            await pm.personalDetailPage.validarMensajeExito();
+        });
+
+        await makeStep('Editar el comentario de un archivo adjunto', async () => {
+            await pm.personalDetailPage.editarComentario(adjunto.updatedComment);
+            await pm.personalDetailPage.validarMensajeExito();
+        });
+
+        await makeStep('Descargar el archivo adjunto', async () => {
+            await pm.personalDetailPage.descargarPrimerAdjunto();
+        });
+
+        await makeStep('Eliminar el archivo adjunto', async () => {
+            await pm.personalDetailPage.eliminarAdjunto();
+            await pm.personalDetailPage.validarMensajeExito();
+        });
+    });
 });

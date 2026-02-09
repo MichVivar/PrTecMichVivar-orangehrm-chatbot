@@ -1,5 +1,6 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { BasePage } from './base.page';
+import path from 'path';
 
 export class PersonalDetailPage extends BasePage {
 
@@ -17,10 +18,24 @@ export class PersonalDetailPage extends BasePage {
     private readonly genderMaleRadio: Locator;
     private readonly genderFemaleRadio: Locator;
     private readonly saveButton: Locator;
+    private readonly bloodTypeSelect: Locator;
+    private readonly testFieldInput: Locator;
+    private readonly customFieldsSaveButton: Locator;
+    private readonly attachmentsSection: Locator;
+    private readonly addAttachmentButton: Locator;
+    private readonly fileInput: Locator;
+    private readonly commentTextArea: Locator;
+    private readonly saveAttachmentButton: Locator;
+    private readonly firstRowEditButton: Locator;
+    private readonly firstRowDownloadButton: Locator;
+    private readonly firstRowDeleteButton: Locator;
+    private readonly confirmDeleteButton: Locator;
 
     
     constructor(page: Page) {
         super(page);
+
+        //Botones y campos de Personal Details
         this.personalDetailsHeader = page.getByRole('heading', { name: 'Personal Details' });
         this.firstNameInput = page.getByPlaceholder('First Name');
         this.middleNameInput = page.getByPlaceholder('Middle Name');
@@ -35,6 +50,28 @@ export class PersonalDetailPage extends BasePage {
         this.genderMaleRadio = page.getByRole('radio', { name: 'Male', exact: true });
         this.genderFemaleRadio = page.getByRole('radio', { name: 'Female', exact: true });
         this.saveButton = page.locator('button[type="submit"]').first();
+
+        //Botones y campos para Custom Fields 
+        this.bloodTypeSelect = page.locator('div.orangehrm-custom-fields').locator('.oxd-select-wrapper');
+        this.testFieldInput = page.locator('div.orangehrm-custom-fields').locator('input').last(); 
+        this.customFieldsSaveButton = page.locator('div.orangehrm-custom-fields').locator('button[type="submit"]');
+
+        this.attachmentsSection = page.locator('div.orangehrm-attachment');
+    
+        // Botones de acción principal
+        this.addAttachmentButton = this.attachmentsSection.getByRole('button', { name: 'Add' });
+        this.fileInput = page.locator('input[type="file"]');
+        this.commentTextArea = this.attachmentsSection.locator('textarea');
+        this.saveAttachmentButton = this.attachmentsSection.locator('button[type="submit"]');
+
+        // Botones de la tabla (Iconos)
+        this.firstRowEditButton = this.attachmentsSection.locator('.bi-pencil-fill').first();
+        this.firstRowDownloadButton = this.attachmentsSection.locator('.bi-download').first();
+        this.firstRowDeleteButton = this.attachmentsSection.locator('.bi-trash').first();
+        
+        // El modal de confirmación de eliminación tiene un botón con el texto "Yes, Delete"
+        this.confirmDeleteButton = page.getByRole('button', { name: 'Yes, Delete' });
+
     }
 
     /**
@@ -76,7 +113,7 @@ export class PersonalDetailPage extends BasePage {
     }
 
     async escribeLicenseExpiryDate(value: string) {
-        await this.licenseExpiryDateInput.fill(value);
+        await this.escribir(this.licenseExpiryDateInput, value);
     }
 
     async seleccionarNationality(value: string) {
@@ -90,7 +127,7 @@ export class PersonalDetailPage extends BasePage {
     }
 
     async escribirFehcaNacimiento(value: string) {
-        await this.dateOfBirthInput.fill(value);
+        await this.escribir(this.dateOfBirthInput, value);
     }
 
     async seleccionarGenero(genero: 'Male' | 'Female') {
@@ -103,6 +140,7 @@ export class PersonalDetailPage extends BasePage {
         await this.page.waitForLoadState('networkidle').catch(() => {});
     }
     
+
     /**
      * @description Valida que se muestre un mensaje de éxito después de guardar los detalles personales.
      * @returns {Promise<void>} No retorna ningún valor, pero lanza una excepción si el mensaje no es visible o no contiene el texto esperado.
@@ -122,5 +160,82 @@ export class PersonalDetailPage extends BasePage {
         await spinner.waitFor({ state: 'visible', timeout: 2000 }).catch(() => {});
         await spinner.waitFor({ state: 'detached', timeout: 15000 });
         await expect(this.firstNameInput).toBeEditable({ timeout: 5000 });
+    }
+
+    /**
+     * @description Selecciona el tipo de sangre.
+     */
+    async seleccionarBloodType(tipo: string) {
+        await this.clickear(this.bloodTypeSelect);
+        await this.page.getByRole('option', { name: tipo }).click();
+    }
+
+    /**
+     * @description Escribe en el campo de TestField.
+     */
+    async escribirTestField(valor: string) {
+        await this.escribir(this.testFieldInput, valor);
+    }
+
+    /**
+     * @description Guarda específicamente la sección de Custom Fields.
+     */
+    async clickGuardarCustomFields() {
+        await this.clickear(this.customFieldsSaveButton);
+        await this.page.waitForLoadState('networkidle').catch(() => {});
+    }
+
+    /**
+     * @description Sube un archivo en la sección de Attachments.
+     */
+    async agregarAdjunto(nombreArchivo: string, comentario: string) {
+        await this.attachmentsSection.scrollIntoViewIfNeeded();
+        await this.clickear(this.addAttachmentButton);
+        
+        const filePath = path.resolve(__dirname, '../utils/fixtures/' + nombreArchivo);
+
+        await this.fileInput.setInputFiles(filePath);
+        await this.escribir(this.commentTextArea, comentario);
+        await expect(this.saveAttachmentButton).toBeEnabled({ timeout: 5000 });
+        await this.clickear(this.saveAttachmentButton);
+        await this.addAttachmentButton.waitFor({ state: 'visible', timeout: 10000 });
+        await this.page.waitForLoadState('networkidle').catch(() => {});
+    }
+
+    /**
+     * @description Maneja la descarga de un archivo.
+     */
+    async descargarPrimerAdjunto() {
+        await this.attachmentsSection.scrollIntoViewIfNeeded();
+        const downloadPromise = this.page.waitForEvent('download');
+        await this.clickear(this.firstRowDownloadButton);
+        const download = await downloadPromise;
+
+        const fileName = download.suggestedFilename();
+        await download.saveAs(path.join('./test-results/descargas/', fileName));
+        
+        return fileName;
+    }
+
+    /**
+     * @description Elimina el primer adjunto de la lista.
+     */
+    async eliminarAdjunto() {
+        await this.attachmentsSection.scrollIntoViewIfNeeded();
+        await this.clickear(this.firstRowDeleteButton);
+        await this.clickear(this.confirmDeleteButton);
+    }
+
+    /**
+     * @description Edita el comentario del primer adjunto de la lista.
+     * @param nuevoComentario El nuevo texto para el comentario.
+     */
+    async editarComentario (nuevoComentario: string) {
+        await this.attachmentsSection.scrollIntoViewIfNeeded();
+        await this.clickear(this.firstRowEditButton);
+        await this.commentTextArea.waitFor({ state: 'visible', timeout: 5000 });
+        await this.escribir(this.commentTextArea, nuevoComentario);
+        await this.clickear(this.saveAttachmentButton);
+        await this.page.waitForLoadState('networkidle').catch(() => {});
     }
 }
