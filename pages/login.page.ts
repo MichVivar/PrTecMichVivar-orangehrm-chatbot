@@ -1,4 +1,4 @@
-import {Page, Locator} from '@playwright/test';
+import {Page, Locator, expect} from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -8,6 +8,7 @@ import { BasePage } from './base.page';
 
 export class LoginPage extends BasePage {
 
+    private readonly loginTitle: Locator;
     private readonly userInput: Locator;
     private readonly passwordInput: Locator;
     private readonly loginButton: Locator;
@@ -18,6 +19,7 @@ export class LoginPage extends BasePage {
     constructor(page: Page) {
         super(page);
         
+        this.loginTitle = page.locator('.orangehrm-login-title');
         this.userInput = page.locator('input[name="username"]');
         this.passwordInput = page.locator('input[name="password"]');
         this.loginButton = page.locator('button[type="submit"]');
@@ -43,6 +45,17 @@ export class LoginPage extends BasePage {
         if (user) await this.escribir(this.userInput, user);
         if (password) await this.escribir(this.passwordInput, password);
         await this.clickear(this.loginButton);
+    }
+
+    /**
+     * @description Valida que el título de la página de login sea visible y correcto.
+     * @returns 
+     */
+    async validarPaginaLogin(){
+        await this.page.waitForURL(/.*\/auth\/login/, { timeout: 10000 });
+        const titulo = this.page.locator('.orangehrm-login-title');
+        await titulo.waitFor({ state: 'visible', timeout: 5000 });
+        return await this.loginTitle.innerText();
     }
 
     // Médodos para validar mensajes de error específicos en la página de login

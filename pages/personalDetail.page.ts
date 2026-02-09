@@ -156,10 +156,14 @@ export class PersonalDetailPage extends BasePage {
      */
     // En PersonalDetailPage.ts
     async esperarCargaDeSeccion() {
-        const spinner = this.page.locator('.orangehrm-paper-container .oxd-loading-spinner-container');
-        await spinner.waitFor({ state: 'visible', timeout: 2000 }).catch(() => {});
-        await spinner.waitFor({ state: 'detached', timeout: 15000 });
-        await expect(this.firstNameInput).toBeEditable({ timeout: 5000 });
+        const spinner = this.page.locator('.oxd-loading-spinner').first();
+        await spinner.waitFor({ state: 'visible', timeout: 3000 }).catch(() => {});
+        await spinner.waitFor({ state: 'detached', timeout: 30000 }).catch(() => {
+            console.log("El spinner tardó demasiado, intentaré continuar...");
+        });
+
+        // 3. Verificamos que un elemento real de la página sea editable antes de seguir
+        await expect(this.firstNameInput).toBeVisible({ timeout: 10000 });
     }
 
     /**

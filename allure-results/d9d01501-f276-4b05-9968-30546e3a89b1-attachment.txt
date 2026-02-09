@@ -1,0 +1,1 @@
+El panel lateral no cargó a tiempo.

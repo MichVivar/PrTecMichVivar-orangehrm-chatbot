@@ -31,15 +31,56 @@ test.describe('Login exitoso @login', () => {
         });
 
         await makeStep('Validar que se redirige al Dashboard', async () => {
-            // Verificación visual del componente Dashboard
             const dashboardVisible = await pm.dashboardPage.estaEnDashboard();
             expect(dashboardVisible).toBe(true);
             
-            // Verificación técnica de la URL
             expect(pm.urlActual).toContain('/dashboard');
         });
     });
 });
+
+
+/**
+ * @description Suite para validar el flujo de Logout del sistema.
+ */
+test.describe('Logout de inicio de sesión @login', () => {
+
+    test.only('Validar que el usuario pueda salir del dashboard', async ({ pm, makeStep }) => {
+        await makeStep('Ingresar usuario válido', async () => {
+            await pm.loginPage.ingresaUsuario('Admin');
+        });
+
+        await makeStep('Ingresar contraseña válida', async () => {
+            await pm.loginPage.ingresaPassword('admin123');
+        });
+        
+        await makeStep('Hacer click en Login', async () => {
+            await pm.loginPage.clickLogin();
+        });
+
+        await makeStep('Validar que se redirige al Dashboard', async () => {
+            const dashboardVisible = await pm.dashboardPage.estaEnDashboard();
+            expect(dashboardVisible).toBe(true);
+            expect(pm.urlActual).toContain('/dashboard');
+        });
+
+        await makeStep('Hacer click en el menú de usuario', async () => {
+            await pm.navigationPage.navegarAOpcionesUsuario();
+        });
+
+        await makeStep('Seleccionar la opción Logout', async () => {
+            await pm.navigationPage.cerrarSesion();
+        });
+
+        await makeStep('Validar redirección a Login y título de la página', async () => {
+            const titulo = await pm.loginPage.validarPaginaLogin();
+    
+            expect(titulo).toBe('Login');
+            expect(pm.urlActual).toContain('/auth/login');
+        });
+     });
+});
+
 
 /**
  * @description Suite de pruebas para validar el manejo de errores en el login.

@@ -3,6 +3,7 @@ import { LoginPage } from './login.page';
 import { DashboardPage } from './dashboard.page'; 
 import { NavigationPage } from './navigation.page';
 import { PersonalDetailPage } from './personalDetail.page';
+import { ChatbotPage } from './chatbot.page';
 
 /**
  * @class PageManager
@@ -15,6 +16,7 @@ export class PageManager {
     private readonly _dashboardPage: DashboardPage; 
     private readonly _naviegationPage: NavigationPage;
     private readonly _personalDetailPage: PersonalDetailPage;
+    private readonly _chatbotPage: ChatbotPage;
 
     /**
      * Instanciamos las páginas aquí
@@ -25,6 +27,7 @@ export class PageManager {
         this._dashboardPage = new DashboardPage(this.page); 
         this._naviegationPage = new NavigationPage(this.page);
         this._personalDetailPage = new PersonalDetailPage(this.page);
+        this._chatbotPage = new ChatbotPage(this.page);
     }
 
     /**
@@ -56,9 +59,17 @@ export class PageManager {
     }
 
     /**
+     * @returns {ChatbotPage} Instancia de la página del chatbot.
+     */
+    get chatbotPage(): ChatbotPage {
+        return this._chatbotPage;
+    }
+
+    /**
      * @returns {string} La URL actual del navegador.
      */
     get urlActual(): string {
         return this.page.url();
     }
+
 }

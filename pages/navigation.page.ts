@@ -17,6 +17,8 @@ export class NavigationPage extends BasePage {
     private readonly maintenanceMenu: Locator;
     private readonly claimMenu: Locator;
     private readonly buzzMenu: Locator;
+    private readonly userDropdown: Locator;
+    private readonly logoutButton: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -34,6 +36,9 @@ export class NavigationPage extends BasePage {
         this.maintenanceMenu = page.locator('a[href*="maintenance/viewMaintenanceModule"]');
         this.claimMenu = page.locator('a[href*="claim/viewClaimModule"]');
         this.buzzMenu = page.locator('a[href*="buzz/viewBuzz"]');
+
+        this.userDropdown = this.page.locator('.oxd-userdropdown-tab');
+        this.logoutButton = this.page.getByRole('menuitem', { name: 'Logout' });
     }
 
     /**
@@ -90,6 +95,22 @@ export class NavigationPage extends BasePage {
     async buscarNavegar(texto: string) {
         await this.escribir(this.inpuntSearch, texto);
         await this.page.waitForTimeout(500); 
+    }
+
+    /**
+     * @description Abre el menú de usuario para mostrar las opciones de Logout y otras configuraciones.
+     */
+    async navegarAOpcionesUsuario() {
+        await this.userDropdown.click();
+        await this.logoutButton.waitFor({ state: 'visible',timeout: 5000 });
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * @description Cierra la sesión del usuario actual.
+     */
+    async cerrarSesion() {
+        await this.clickear(this.logoutButton);
     }
     
 }
