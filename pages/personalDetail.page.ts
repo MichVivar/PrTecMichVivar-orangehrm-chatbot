@@ -19,23 +19,21 @@ export class PersonalDetailPage extends BasePage {
     private readonly saveButton: Locator;
 
     
-    
     constructor(page: Page) {
         super(page);
-        this.personalDetailsHeader = page.locator('.orangehrm-edit-employee-content h6').first();
-        this.firstNameInput = page.locator('input[name="firstName"]');
-        this.middleNameInput = page.locator('input[name="middleName"]');
-        this.lastNameInput = page.locator('input[name="lastName"]');
-        this.employeIdInput = page.locator('.oxd-input-group').filter({ hasText: /Employee Id/ }).locator('input');
-        this.otherIdInput = page.locator('.oxd-input-group').filter({ hasText: /Other Id/ }).locator('input');
-        this.driverLicenseInput = page.locator('.oxd-input-group').filter({ hasText: /Driver's License Number/ }).locator('input');
-        this.licenseExpiryDateInput = page.locator('input[placeholder="yyyy-dd-mm"], input[placeholder="yyyy-mm-dd"]').first();
-        this.nationalitySelect = page.locator('.oxd-select-wrapper').nth(0);
-        this.maritalStatusSelect = page.locator('.oxd-select-wrapper').nth(1);
-        this.dateOfBirthInput = page.locator('input[placeholder="yyyy-dd-mm"], input[placeholder="yyyy-mm-dd"]').last();
-        this.genderMaleRadio = page.locator('input[type="radio"][value="1"]');
-        this.genderFemaleRadio = page.locator('input[type="radio"][value="2"]');
-        
+        this.personalDetailsHeader = page.getByRole('heading', { name: 'Personal Details' });
+        this.firstNameInput = page.getByPlaceholder('First Name');
+        this.middleNameInput = page.getByPlaceholder('Middle Name');
+        this.lastNameInput = page.getByPlaceholder('Last Name');
+        this.employeIdInput = page.locator('div.oxd-input-group:has-text("Employee Id") input');
+        this.otherIdInput = page.locator('div.oxd-input-group:has-text("Other Id") input');
+        this.driverLicenseInput = page.locator('div.oxd-input-group:has-text("Driver\'s License Number") input');
+        this.licenseExpiryDateInput = page.locator('div.oxd-input-group:has-text("License Expiry Date") input');
+        this.nationalitySelect = page.locator('div.oxd-input-group:has-text("Nationality") .oxd-select-text');
+        this.maritalStatusSelect = page.locator('div.oxd-input-group:has-text("Marital Status") .oxd-select-text');
+        this.dateOfBirthInput = page.locator('div.oxd-input-group:has-text("Date of Birth") input');
+        this.genderMaleRadio = page.getByRole('radio', { name: 'Male', exact: true });
+        this.genderFemaleRadio = page.getByRole('radio', { name: 'Female', exact: true });
         this.saveButton = page.locator('button[type="submit"]').first();
     }
 
