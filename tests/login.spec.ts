@@ -45,7 +45,7 @@ test.describe('Login exitoso @login', () => {
  */
 test.describe('Logout de inicio de sesión @login', () => {
 
-    test.only('Validar que el usuario pueda salir del dashboard', async ({ pm, makeStep }) => {
+    test('Validar que el usuario pueda salir del dashboard', async ({ pm, makeStep }) => {
         await makeStep('Ingresar usuario válido', async () => {
             await pm.loginPage.ingresaUsuario('Admin');
         });
